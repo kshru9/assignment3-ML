@@ -111,7 +111,7 @@ class LogisticRegression:
 
         hyp = self.hypothesis(X, thetas)
         cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp) + (1-y)* np.log(1-hyp)) )
-        print("cost:", cost)
+        # print("cost:", cost)
         return cost
 
     def predict(self, X):

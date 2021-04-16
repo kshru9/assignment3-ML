@@ -23,16 +23,16 @@ kf3 = KFold(n_splits=K, shuffle=True)
 scores = []
 
 i = 1
-for train_index, test_index in kf3.split(data):
+for train_index, test_index in kf3.split(cancer_df):
     
     X_train = pd.DataFrame(cancer_df.iloc[train_index].loc[:, features])
-    X_test = cancer_df.iloc[test_index][features]
+    X_test = pd.DataFrame(cancer_df.iloc[test_index][features])
     y_train = pd.Series(cancer_df.iloc[train_index].loc[:,'target'])
-    y_test = cancer_df.loc[test_index]['target']
+    y_test = pd.Series(cancer_df.loc[test_index]['target'])
 
     LR = LogisticRegression()
 
-    LR.fit_unregularised(X_train,y_train,tol=0.0001, n_iter=1, lr=0.01, fit_intercept=False)
+    LR.fit_unregularised(X_train,y_train,tol=0.000001, n_iter=400, lr=0.01, fit_intercept=False)
     
     y_hat = LR.predict(X_test)
 
