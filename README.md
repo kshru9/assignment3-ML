@@ -19,10 +19,12 @@
 
 
 4. What is time and space complexity for Logistic regression learning and prediction? [1 mark]
-- Create a fully connected NN (MLP) where the input is X, y, [n1, n2, …, nh] where ni is the number of neurons in i^th hidden layer, [g1, g2, …, gh] where gi in {‘relu’, ‘identity’, ‘sigmoid’} are the activations for i^th layer. You should use Jax for backpropagation. You should write the forward pass yourself. [3 marks]
-- Test NN code for simple classification (Digits dataset)  and regression dataset (Boston housing) both using 3-fold CV. You can choose the number of layers and activations of your choice. [3 marks]
 
+5. Create a fully connected NN (MLP) where the input is X, y, [n1, n2, …, nh] where ni is the number of neurons in i^th hidden layer, [g1, g2, …, gh] where gi in {‘relu’, ‘identity’, ‘sigmoid’} are the activations for i^th layer. You should use Jax for backpropagation. You should write the forward pass yourself. [3 marks]
 
+6.Test NN code for simple classification (Digits dataset)  and regression dataset (Boston housing) both using 3-fold CV. You can choose the number of layers and activations of your choice. [3 marks]
+
+7. In this question, you have to compare the performance of: transfer learning, VGG1 and VGG1 with data augmentation on an image dataset. Refer this article: https://machinelearningmastery.com/how-to-develop-a-convolutional-neural-network-to-classify-photos-of-dogs-and-cats/ You do not need to write your own code. Reuse the code from the post. You need to create the dataset on your own based on your first and last name. For instance, my name is “Nipun Batra”. I will thus choose a data set of my liking: nightingale v/s bear. You can refer to: https://course.fast.ai/videos/?lesson=3 or https://course.fast.ai/images or plainly download 40 images of both classes (total 80 images). Of these 40 images of each class, we will use 30 for training and 10 for testing.  You may choose any two objects for the dataset. For example, I could have created: Novak Djokovic v/s Boris Becker or Notebook v/s Ballpen. The absolute value of accuracy you obtain is immaterial. [4 marks]
 
 
 
