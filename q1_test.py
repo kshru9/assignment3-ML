@@ -10,14 +10,25 @@ np.random.seed(42)
 N = 30
 P = 2
 X = pd.DataFrame(np.random.randn(N, P))
-y = pd.Series(np.random.randn(N))
+y = pd.Series(np.random.randint(0,1,size=N))
 
 
 for fit_intercept in [True, False]:
     LR = LogisticRegression()
 
-    LR.fit_unregularised(X,y,tol=0.000001, n_iter=100, lr=0.01, fit_intercept=True)
+    LR.fit_unregularised(X,y,tol=0.000001, n_iter=400, lr=0.01, fit_intercept=True)
 
     y_hat = LR.predict(X)
 
     print('Accuracy: ', accuracy(y_hat=y_hat, y=y))
+
+
+
+# for fit_intercept in [True, False]:
+#     LR = LogisticRegression()
+
+#     LR.fit_unregularised_autograd(X,y,tol=0.000001, n_iter=100, lr=0.01, fit_intercept=True)
+
+#     y_hat = LR.predict(X)
+
+#     print('Accuracy: ', accuracy(y_hat=y_hat, y=y))

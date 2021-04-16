@@ -1,6 +1,7 @@
 import numpy as np
+from numpy.lib.function_base import gradient
 import pandas as pd
-
+from autograd import grad
 
 class LogisticRegression:
     def __init__(self) -> None:
@@ -44,11 +45,51 @@ class LogisticRegression:
         self.thetas_history.append(thetas)
         self.cost_func_history.append(self.cost_function(X,y,thetas))
 
-        for it in self.num_of_iterations:
+        for it in range(self.num_of_iterations):
             h = self.hypothesis(X,thetas)
             for attr in range(self.num_of_thetas):
                 thetas[attr] -= (lr/self.num_of_samples) * np.sum((h-y)*X.iloc[:, attr])
             self.cost_func_history.append(self.cost_function(X,y,thetas))
+
+        return self.thetas
+
+    def fit_unregularised_autograd(self, X, y, tol, n_iter=100, lr=0.01, fit_intercept=True):
+        # handling fit intercept param
+        if (fit_intercept == True):
+            self.num_of_thetas = len(list(X.columns))+1
+            thetas = pd.Series(np.random.randn(self.num_of_thetas))
+            bias = pd.DataFrame(pd.Series([1.0 for i in range(len(X))]))
+            X = pd.concat([bias,X],axis=1)
+        else:
+            self.num_of_thetas = len(list(X.columns))
+            self.thetas = pd.Series(np.random.randn(self.num_of_thetas))
+        
+        self.num_of_samples = len(X)
+        self.num_of_iterations = n_iter
+        self.learning_rate = lr
+        self.tolerance = tol
+        self.fit_intercept = fit_intercept
+
+        # init hypothesis and cost functions
+        self.thetas_history.append(thetas)
+
+        gradient = grad(self.cost_function)
+
+        X_il,y_il = X.to_numpy(),y.to_numpy()
+        theta_il = thetas.to_numpy()
+        self.cost_func_history.append(gradient(X_il,y_il,theta_il))
+
+        for it in range(self.num_of_iterations):
+            h = self.hypothesis(X,thetas)
+            for attr in range(self.num_of_thetas):
+                
+                X_il,y_il = X.to_numpy(),y.to_numpy()
+                theta_il = thetas.to_numpy()
+
+                temp_grad = gradient(X_il,y_il,theta_il)
+
+                thetas[attr] -= (lr/self.num_of_samples) * temp_grad
+            self.cost_func_history.append(temp_grad)
 
         return self.thetas
 
@@ -59,27 +100,26 @@ class LogisticRegression:
         pass
 
     def hypothesis(self, X, theta):
-        """
-        Calculating step function for logistic regression
-        """
-        z = np.dot(X.T, theta)
+        """Calculating step function for logistic regression"""
+
+        z = np.dot(theta, X.T)
         sigmoid = 1 / (1 + np.exp( -z ) ) - self.tolerance
         return sigmoid
 
     def cost_function(self, X, y, thetas):
         """Calculating cost function to update the thetas values in Gradient descent"""
+
         hyp = self.hypothesis(X, thetas)
         cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp) + (1-y)* np.log(1-hyp)) )
         return cost
 
     def predict(self, X):
         """Prediction function"""
-        # h = hypothesis(X, theta)
-        # for i in range(len(h)):
-        #     h[i]=1 if h[i]>=0.5 else 0
-        # y = list(y)
-        # acc = np.sum([y[i] == h[i] for i in range(len(y))])/len(y)
-        # return J, acc
+
+        bias = pd.DataFrame(pd.Series([1.0 for i in range(len(X))]))
+
+        if self.fit_intercept:
+            X = pd.concat([bias,X],axis=1)
 
         theta = pd.Series(self.thetas_history[-1])
         hyp = self.hypothesis(X, theta)
