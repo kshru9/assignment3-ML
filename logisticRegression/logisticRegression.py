@@ -33,7 +33,7 @@ class LogisticRegression:
             X = pd.concat([bias,X],axis=1)
         else:
             self.num_of_thetas = len(list(X.columns))
-            self.thetas = pd.Series(np.random.randn(self.num_of_thetas))
+            thetas = pd.Series(np.random.randn(self.num_of_thetas))
         
         self.num_of_samples = len(X)
         self.num_of_iterations = n_iter
@@ -111,6 +111,7 @@ class LogisticRegression:
 
         hyp = self.hypothesis(X, thetas)
         cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp) + (1-y)* np.log(1-hyp)) )
+        print("cost:", cost)
         return cost
 
     def predict(self, X):
