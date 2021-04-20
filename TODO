@@ -1,1 +1,3 @@
 dataset with K and do q7 using it
+dataset split 30 10
+implement onehotencoder for multiclass
