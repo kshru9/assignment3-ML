@@ -92,3 +92,12 @@ class LRMulitclass():
 
         # print(final_pred)
         return pd.Series(final_pred)
+
+    def plot(self):
+        plt.figure()
+
+        from sklearn.decomposition import PCA
+        pca = PCA(n_components=2)
+        proj = pca.fit_transform(digits.data)
+        plt.scatter(proj[:, 0], proj[:, 1], c=digits.target, cmap="Paired")
+        plt.colorbar()
