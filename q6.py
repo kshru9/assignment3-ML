@@ -3,6 +3,7 @@ from sklearn import datasets
 
 from NN.nn import MultilayerPerceptron, train_test_split, normalize
 
+
 def main():
     data = datasets.load_boston()
     X = normalize(data.data)
