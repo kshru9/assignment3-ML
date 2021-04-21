@@ -33,13 +33,13 @@ for train_index, test_index in kf3.split(cancer_df):
 
     # print(X_train.columns)
     # print(X_test)
-    print("y_test:", y_test)
+    # print("y_test:", y_test)
     LR = LRMulitclass()
 
-    LR.fit(X_train,y_train, n_iter=100, lr=0.01)
+    LR.fit(X_train,y_train, n_iter=300, lr=0.01)
     
     y_hat = LR.predict(X_test)
-    print("y_hat:",y_hat)
+    # print("y_hat:",y_hat)
     temp_acc = accuracy(y_hat=y_hat, y=y_test)
     
     scores.append(temp_acc)

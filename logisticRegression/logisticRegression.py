@@ -137,8 +137,8 @@ class LogisticRegression:
         """Calculating cost function to update the thetas values in Gradient descent"""
 
         hyp = self.hypothesis(X, thetas)
-        cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp) + (1-y)* np.log(1-hyp)) )
-        print("printing cost:", cost)
+        cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp + 1e-5) + (1-y)* np.log(1-hyp+1e-5)) )
+        # print("printing cost:", cost)
         return cost
 
     def predict(self, X):

@@ -29,12 +29,12 @@ class LRMulitclass():
             y_temp = y_onehot.iloc[:,model]
             # print("y_temp:", y_temp)
             LR = LogisticRegression()
-            thetas = LR.fit_unregularised(X,y_temp,n_iter=n_iter, lr=lr, fit_intercept=False)
+            thetas = LR.fit(X,y_temp,n_iter=n_iter, lr=lr, fit_intercept=False)
             # print("thetas:",thetas)
             self.models.append(LR)
             self.thetas_history.append(thetas)
-        print("printingn thetas hist")
-        print(self.thetas_history)
+        # print("printingn thetas hist")
+        # print(self.thetas_history)
 
     def onehotencoder(self,y):
         onehot = []
@@ -42,7 +42,7 @@ class LRMulitclass():
         for i in range(self.num_of_samples):
             # print("i",i)
             pos = y[i]
-            temp = [-1]*self.num_of_out_classes
+            temp = [0]*self.num_of_out_classes
             temp[pos] = 1
             onehot.append(temp)
         onehot = pd.DataFrame(onehot)
@@ -56,13 +56,13 @@ class LRMulitclass():
     
     def softmax(self,y_linear):
         exp = np.exp(y_linear).reshape(-1,1)
-        print("exp:" , exp)
+        # print("exp:" , exp)
         norms = np.sum(exp).reshape(-1,1)
         return exp / norms
 
     def hypothesis_multiclass(self,X,theta):
         z = np.dot(theta, X.T) + 0.0001
-        print("z:" , z)
+        # print("z:" , z)
         sm = self.softmax(z)
         my_list = map(lambda x: x[0], sm)
         return pd.Series(my_list)
@@ -74,9 +74,9 @@ class LRMulitclass():
     def predict(self,X):
         model_predict = []
         for i in range(len(self.models)):
-            model_predict.append(self.hypothesis(X, theta=self.thetas_history[i]))
+            model_predict.append(self.hypothesis_multiclass(X, theta=self.thetas_history[i]))
         
-        print("model_pred:",model_predict)
+        # print("model_pred:",model_predict)
         final_pred = []
         for i in range(len(X)):
             mx = 0
@@ -85,7 +85,7 @@ class LRMulitclass():
                 # print("model_predict[j][i]:", model_predict[j][i])
                 if (mx < model_predict[j][i]):
                     mx = model_predict[j][i]
-                    mx_index = j+1
+                    mx_index = j
                 # mx = max(mx, model_predict[j][i])
                 
             final_pred.append(mx_index)
