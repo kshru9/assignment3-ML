@@ -14,7 +14,7 @@ y = pd.Series(np.random.randint(0,P,size=N))
 
 LR = LRMulitclass()
 
-LR.fit(X,y,lr=0.01,n_iter=1000)
+LR.fit(X,y,lr=0.0001,n_iter=100000)
 
 y_hat = LR.predict(X)
 

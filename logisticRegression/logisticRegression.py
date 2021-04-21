@@ -14,7 +14,7 @@ class LogisticRegression:
         self.thetas_history = []
         self.cost_func_history = []
 
-    def fit_unregularised(self, X, y, tol=0.0001, n_iter=100, lr=0.01, fit_intercept=True):
+    def fit(self, X, y, tol=0.0001, n_iter=100, lr=0.01, fit_intercept=True, reg=None):
         '''
         Function to train model using vectorised gradient descent.
         :param X: pd.DataFrame with rows as samples and columns as features (shape: (n_samples, n_features))
@@ -43,14 +43,11 @@ class LogisticRegression:
         self.tolerance = tol
         self.fit_intercept = fit_intercept
 
-        # init hypothesis and cost functions
-        self.thetas_history.append(thetas)
-        self.cost_func_history.append(self.cost_function(X,y,thetas))
-
         for it in range(self.num_of_iterations):
             h = self.hypothesis(X,thetas)
             for attr in range(self.num_of_thetas):
                 thetas[attr] -= (lr/self.num_of_samples) * np.sum((h-y)*X.iloc[:, attr])
+            self.thetas_history.append(thetas)
             self.cost_func_history.append(self.cost_function(X,y,thetas))
 
         return thetas
@@ -100,42 +97,7 @@ class LogisticRegression:
 
     def fit_l2_regularised(self):
         pass
-
-    def fit_multiclass(self,X,y,tol=0.0001, lr=0.01, n_iter=100, fit_intercept=True):
         
-        # handling fit intercept param
-        # if (fit_intercept == True):
-        #     self.num_of_thetas = len(list(X.columns))+1
-        #     thetas = pd.Series(np.random.randn(self.num_of_thetas))
-        #     bias = pd.DataFrame(pd.Series([1.0 for i in range(len(X))]))
-        #     X = pd.concat([bias,X],axis=1)
-        # else:
-        self.num_of_thetas = len(list(X.columns))
-        thetas = pd.Series(np.random.randn(self.num_of_thetas))
-        
-        self.num_of_samples = len(X)
-        self.num_of_iterations = n_iter
-        self.learning_rate = lr
-        self.tolerance = tol
-        self.fit_intercept = fit_intercept
-
-        # init hypothesis and cost functions
-        self.thetas_history.append(thetas)
-        self.cost_func_history.append(self.cost_function(X,y,thetas))
-
-        y_onehot = self.onehotencoder(y)
-        # print(y_onehot)
-        for i in range(0, self.num_of_iterations):
-            for j in range(0, self.num_of_thetas):
-                thetas = pd.DataFrame(thetas)
-                h = self.hypothesis_multiclass(theta=thetas.iloc[:,j], X=X)
-                # for k in range(0, theta.shape[0]):
-                thetas.iloc[:, j] -= (lr/self.num_of_samples) * np.sum((h-y.iloc[:, j])*X.iloc[:, j])
-                # theta = pd.DataFrame(theta)
-
-        return self.thetas
-        
-
     def hypothesis(self, X, theta):
         """Calculating step function for logistic regression"""
 
@@ -148,25 +110,7 @@ class LogisticRegression:
 
         hyp = self.hypothesis(X, thetas)
         cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp) + (1-y)* np.log(1-hyp)) )
-        # print("cost:", cost)
         return cost
-
-    def softmax(self,y_linear):
-        exp = np.exp(y_linear).reshape(-1,1)
-        print("exp:" , exp)
-        norms = np.sum(exp).reshape(-1,1)
-        return exp / norms
-
-    def hypothesis_multiclass(self,X,theta):
-        z = np.dot(theta, X.T) + 0.0001
-        print("z:" , z)
-        sm = self.softmax(z)
-        my_list = map(lambda x: x[0], sm)
-        return pd.Series(my_list)
-
-    def cost_function_multiclass(self,X,y,thetas):
-        hyp = self.hypothesis_multiclass(X,thetas)
-        return - np.sum(y * np.log(hyp))
 
     def predict(self, X):
         """Prediction function"""
