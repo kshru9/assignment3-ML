@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from logisticRegression.logisticRegression import LogisticRegression
+from logisticRegression.LR_multiclass import LRMulitclass
 from metrics import accuracy, recall, precision
 
 np.random.seed(42)
@@ -12,11 +12,10 @@ X = pd.DataFrame(np.random.randn(N, P))
 y = pd.Series(np.random.randint(0,P,size=N))
 
 
-for fit_intercept in [True, False]:
-    LR = LogisticRegression()
+LR = LRMulitclass()
 
-    LR.fit_multiclass(X,y,tol=0.0001,lr=0.01,n_iter=100,fit_intercept=fit_intercept)
+LR.fit(X,y,lr=0.01,n_iter=1000)
 
-    y_hat = LR.predict(X)
+y_hat = LR.predict(X)
 
-    print('Accuracy: ', accuracy(y_hat=y_hat, y=y))
+print('Accuracy: ', accuracy(y_hat=y_hat, y=y))

@@ -53,7 +53,7 @@ class LogisticRegression:
                 thetas[attr] -= (lr/self.num_of_samples) * np.sum((h-y)*X.iloc[:, attr])
             self.cost_func_history.append(self.cost_function(X,y,thetas))
 
-        return self.thetas
+        return thetas
 
     def fit_unregularised_autograd(self, X, y, tol, n_iter=100, lr=0.01, fit_intercept=True):
         # handling fit intercept param
