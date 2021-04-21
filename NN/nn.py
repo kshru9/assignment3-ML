@@ -96,25 +96,38 @@ class MultilayerPerceptron():
     learning_rate: float
         The step length that will be used when updating the weights.
     """
-    def __init__(self, n_hidden, n_iterations=3000, learning_rate=0.01):
+    def __init__(self, n_hidden, n_iterations=100, learning_rate=0.01, classifier=True):
         self.n_hidden = n_hidden
         self.n_iterations = n_iterations
         self.learning_rate = learning_rate
         self.hidden_activation = Sigmoid()
         self.output_activation = Softmax()
         self.loss = CrossEntropy()
+        self.classifier =classifier
 
     def _initialize_weights(self, X, y):
-        n_samples, n_features = X.shape
-        _, n_outputs = y.shape
-        # Hidden layer
-        limit   = 1 / math.sqrt(n_features)
-        self.W  = np.random.uniform(-limit, limit, (n_features, self.n_hidden))
-        self.w0 = np.zeros((1, self.n_hidden))
-        # Output layer
-        limit   = 1 / math.sqrt(self.n_hidden)
-        self.V  = np.random.uniform(-limit, limit, (self.n_hidden, n_outputs))
-        self.v0 = np.zeros((1, n_outputs))
+        if (self.classifier):
+            n_samples, n_features = X.shape
+            _, n_outputs = y.shape
+            # Hidden layer
+            limit   = 1 / math.sqrt(n_features)
+            self.W  = np.random.uniform(-limit, limit, (n_features, self.n_hidden))
+            self.w0 = np.zeros((1, self.n_hidden))
+            # Output layer
+            limit   = 1 / math.sqrt(self.n_hidden)
+            self.V  = np.random.uniform(-limit, limit, (self.n_hidden, n_outputs))
+            self.v0 = np.zeros((1, n_outputs))
+        else:
+            n_samples, n_features = X.shape
+            n_outputs = 1
+            # Hidden layer
+            limit   = 1 / math.sqrt(n_features)
+            self.W  = np.random.uniform(-limit, limit, (n_features, self.n_hidden))
+            self.w0 = np.zeros((1, self.n_hidden))
+            # Output layer
+            limit   = 1 / math.sqrt(self.n_hidden)
+            self.V  = np.random.uniform(-limit, limit, (self.n_hidden, n_outputs))
+            self.v0 = np.zeros((1, n_outputs))
 
     def fit(self, X, y):
 
