@@ -6,12 +6,11 @@ class LogisticRegression:
         self.num_of_iterations = None
         self.thetas = None
         self.tolerance = None
-        self.lbda = 0.9
 
         self.thetas_history = []
         self.cost_func_history = []
 
-    def fit(self, X, y, tol=0.0001, n_iter=100, lr=0.01, fit_intercept=True, reg=None):
+    def fit(self, X, y, tol=0.0001, n_iter=100, lr=0.01, fit_intercept=True, reg=None, lbda=0.9):
         '''
         Function to train model using vectorised gradient descent.
         :param X: pd.DataFrame with rows as samples and columns as features (shape: (n_samples, n_features))
@@ -40,6 +39,7 @@ class LogisticRegression:
         self.tolerance = tol
         self.fit_intercept = fit_intercept
         self.reg = reg
+        self.lbda = lbda
 
         for it in range(self.num_of_iterations):
             h = self.hypothesis(X,thetas)
