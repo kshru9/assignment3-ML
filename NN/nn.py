@@ -1,7 +1,8 @@
 from __future__ import print_function, division
 import numpy as np
 import math
-from sklearn import datasets
+from jax import grad
+import jax.numpy as jnp
 
 
 class Sigmoid():
@@ -29,10 +30,6 @@ class Loss(object):
 
     def acc(self, y, y_pred):
         return 0
-def accuracy_score(y_true, y_pred):
-    """ Compare y_true to y_pred and return the accuracy """
-    accuracy = np.sum(y_true == y_pred, axis=0) / len(y_true)
-    return accuracy
 
 class CrossEntropy(Loss):
     def __init__(self): pass
@@ -41,9 +38,6 @@ class CrossEntropy(Loss):
         # Avoid division by zero
         p = np.clip(p, 1e-15, 1 - 1e-15)
         return - y * np.log(p) - (1 - y) * np.log(1 - p)
-
-    def acc(self, y, p):
-        return accuracy_score(np.argmax(y, axis=1), np.argmax(p, axis=1))
 
     def gradient(self, y, p):
         # Avoid division by zero
@@ -72,7 +66,7 @@ def shuffle_data(X, y, seed=None):
     np.random.shuffle(idx)
     return X[idx], y[idx]
 
-def train_test_split(X, y, test_size=0.5, shuffle=True, seed=None):
+def train_test_split(X, y, test_size=0.25, shuffle=True, seed=None):
     """ Split the data into train and test sets """
     if shuffle:
         X, y = shuffle_data(X, y, seed)

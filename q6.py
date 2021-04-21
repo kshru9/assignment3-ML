@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn import datasets
 
-from NN.nn import MultilayerPerceptron, to_categorical, train_test_split, normalize, accuracy_score
+from NN.nn import MultilayerPerceptron, train_test_split, normalize
 
 def main():
     data = datasets.load_boston()
@@ -20,11 +20,11 @@ def main():
         classifier=False)
 
     clf.fit(X_train, y_train)
-    y_pred = np.argmax(clf.predict(X_test), axis=1)
-    y_test = np.argmax(y_test, axis=1)
+    # y_pred = np.argmax(clf.predict(X_test), axis=1)
+    # y_test = np.argmax(y_test, axis=1)
 
-    accuracy = accuracy_score(y_test, y_pred)
-    print ("Accuracy:", accuracy)
+    # accuracy = accuracy_score(y_test, y_pred)
+    # print ("Accuracy:", accuracy)
 
     # # Reduce dimension to two using PCA and plot the results
     # Plot().plot_in_2d(X_test, y_pred, title="Multilayer Perceptron", accuracy=accuracy, legend_labels=np.unique(y))
