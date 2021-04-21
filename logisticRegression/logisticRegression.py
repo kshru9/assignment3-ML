@@ -6,6 +6,7 @@ class LogisticRegression:
         self.num_of_iterations = None
         self.thetas = None
         self.tolerance = None
+        self.lbda = 0.9
 
         self.thetas_history = []
         self.cost_func_history = []
@@ -38,11 +39,15 @@ class LogisticRegression:
         self.learning_rate = lr
         self.tolerance = tol
         self.fit_intercept = fit_intercept
+        self.reg = reg
 
         for it in range(self.num_of_iterations):
             h = self.hypothesis(X,thetas)
             for attr in range(self.num_of_thetas):
-                thetas[attr] -= (lr/self.num_of_samples) * np.sum((h-y)*X.iloc[:, attr])
+                if (reg is not None):
+                    thetas[attr] -= (lr/self.num_of_samples) * (np.sum((h-y)*X.iloc[:, attr]) + 2 * np.sum(thetas))
+                else:
+                    thetas[attr] -= (lr/self.num_of_samples) * np.sum((h-y)*X.iloc[:, attr])
             self.thetas_history.append(thetas)
             self.cost_func_history.append(self.cost_function(X,y,thetas))
 
@@ -137,7 +142,12 @@ class LogisticRegression:
         """Calculating cost function to update the thetas values in Gradient descent"""
 
         hyp = self.hypothesis(X, thetas)
-        cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp + 1e-5) + (1-y)* np.log(1-hyp+1e-5)) )
+        if (self.reg == 'L1'):
+            cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp + 1e-5) + (1-y)* np.log(1-hyp+1e-5)) ) + (self.lbda * np.abs(thetas))
+        elif(self.reg == "L2"):
+            cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp + 1e-5) + (1-y)* np.log(1-hyp+1e-5)) ) + (self.lbda * np.dot(thetas.T, thetas)) 
+        else:
+            cost = - ((1/self.num_of_samples) * np.sum(y * np.log(hyp + 1e-5) + (1-y)* np.log(1-hyp+1e-5)) )   
         # print("printing cost:", cost)
         return cost
 
