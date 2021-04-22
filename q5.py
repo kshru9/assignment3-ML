@@ -14,9 +14,9 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, seed=1)
 
     # MLP
-    clf = MultilayerPerceptron(n_hidden=16,
-        n_iterations=1000,
-        learning_rate=0.01)
+    clf = MultilayerPerceptron(n_hidden=128,
+        n_iterations=10000,
+        learning_rate=0.001)
 
     clf.fit(X_train, y_train)
     y_pred = np.argmax(clf.predict(X_test), axis=1)

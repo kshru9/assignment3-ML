@@ -1,8 +1,8 @@
 from __future__ import print_function, division
 import numpy as np
 import math
-from jax import grad
-import jax.numpy as jnp
+# from jax import grad
+# import jax.numpy as jnp
 
 
 class Sigmoid():
@@ -11,6 +11,10 @@ class Sigmoid():
 
     def gradient(self, x):
         return self.__call__(x) * (1 - self.__call__(x))
+
+class ReLU():
+    def __call__(self, x):
+        return max(0,x)
 
 class Softmax():
     def __call__(self, x):
@@ -103,13 +107,20 @@ class MultilayerPerceptron():
         if (self.classifier):
             n_samples, n_features = X.shape
             _, n_outputs = y.shape
-            # Hidden layer
+            # Hidden layer 1
             limit   = 1 / math.sqrt(n_features)
             self.W  = np.random.uniform(-limit, limit, (n_features, self.n_hidden))
             self.w0 = np.zeros((1, self.n_hidden))
+
+            # Hidden layer 2
+            limit   = 1 / math.sqrt(n_features)
+            hl_2 = int(math.sqrt(self.n_hidden))
+            self.W1  = np.random.uniform(-limit, limit, (self.n_hidden, hl_2))
+            self.w1 = np.zeros((1, hl_2))
+
             # Output layer
             limit   = 1 / math.sqrt(self.n_hidden)
-            self.V  = np.random.uniform(-limit, limit, (self.n_hidden, n_outputs))
+            self.V  = np.random.uniform(-limit, limit, (hl_2, n_outputs))
             self.v0 = np.zeros((1, n_outputs))
         else:
             n_samples, n_features = X.shape
@@ -133,11 +144,16 @@ class MultilayerPerceptron():
             #  Forward Pass
             # ..............
 
-            # HIDDEN LAYER
+            # HIDDEN LAYER 1
             hidden_input = X.dot(self.W) + self.w0
             hidden_output = self.hidden_activation(hidden_input)
+
+            # HIDDEN LAYER 2
+            hidden_input_2 = hidden_output.dot(self.W1) + self.w1
+            hidden_output_2 = self.hidden_activation(hidden_input_2)
+
             # OUTPUT LAYER
-            output_layer_input = hidden_output.dot(self.V) + self.v0
+            output_layer_input = hidden_output_2.dot(self.V) + self.v0
             y_pred = self.output_activation(output_layer_input)
 
             # ...............
@@ -147,20 +163,28 @@ class MultilayerPerceptron():
             # OUTPUT LAYER
             # Grad. w.r.t input of output layer
             grad_wrt_out_l_input = self.loss.gradient(y, y_pred) * self.output_activation.gradient(output_layer_input)
-            grad_v = hidden_output.T.dot(grad_wrt_out_l_input)
+            grad_v = hidden_output_2.T.dot(grad_wrt_out_l_input)
             grad_v0 = np.sum(grad_wrt_out_l_input, axis=0, keepdims=True)
             # HIDDEN LAYER
             # Grad. w.r.t input of hidden layer
             # print("grad_wrt_out_l_input",grad_wrt_out_l_input)
             # print(self.V)
-            grad_wrt_hidden_l_input = grad_wrt_out_l_input.dot(self.V.T) * self.hidden_activation.gradient(hidden_input)
+
+            grad_wrt_hidden_l_input_2 = grad_wrt_out_l_input.dot(self.V.T) * self.hidden_activation.gradient(hidden_input_2)
+            grad_w1 = hidden_output.T.dot(grad_wrt_hidden_l_input_2)
+            grad_w1_0 = np.sum(grad_wrt_hidden_l_input_2, axis=0, keepdims=True)
+
+            grad_wrt_hidden_l_input = grad_wrt_hidden_l_input_2.dot(self.W1.T) * self.hidden_activation.gradient(hidden_input)
             grad_w = X.T.dot(grad_wrt_hidden_l_input)
             grad_w0 = np.sum(grad_wrt_hidden_l_input, axis=0, keepdims=True)
 
             # Update weights (by gradient descent)
             # Move against the gradient to minimize loss
+            # print(self.V, grad_v)
             self.V  -= self.learning_rate * grad_v
             self.v0 -= self.learning_rate * grad_v0
+            self.W1 -= self.learning_rate * grad_w1
+            self.w1 -= self.learning_rate * grad_w1_0
             self.W  -= self.learning_rate * grad_w
             self.w0 -= self.learning_rate * grad_w0
 
@@ -169,6 +193,10 @@ class MultilayerPerceptron():
         # Forward pass:
         hidden_input = X.dot(self.W) + self.w0
         hidden_output = self.hidden_activation(hidden_input)
-        output_layer_input = hidden_output.dot(self.V) + self.v0
+
+        hidden_input_2 = hidden_output.dot(self.W1) + self.w1
+        hidden_output_2 = self.hidden_activation(hidden_input_2)
+
+        output_layer_input = hidden_output_2.dot(self.V) + self.v0
         y_pred = self.output_activation(output_layer_input)
         return y_pred
