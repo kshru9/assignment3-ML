@@ -44,8 +44,10 @@ class LogisticRegression:
         for it in range(self.num_of_iterations):
             h = self.hypothesis(X,thetas)
             for attr in range(self.num_of_thetas):
-                if (reg is not None):
-                    thetas[attr] -= (lr/self.num_of_samples) * (np.sum((h-y)*X.iloc[:, attr]) + 2 * np.sum(thetas))
+                if (reg == 'L1'):
+                    thetas[attr] -= (lr/self.num_of_samples) * (np.sum((h-y)*X.iloc[:, attr]) + ( lbda * np.sum(thetas)) )
+                elif (reg=='L2'):
+                    thetas[attr] -= (lr/self.num_of_samples) * (np.sum((h-y)*X.iloc[:, attr]) + ( lbda * np.dot(thetas.T, thetas) ) )
                 else:
                     thetas[attr] -= (lr/self.num_of_samples) * np.sum((h-y)*X.iloc[:, attr])
             self.thetas_history.append(thetas)

@@ -14,12 +14,12 @@ y = pd.Series(np.random.randint(0,2,size=N))
 scores = []
 lambdas = []
 
-for i in range(1,9):
+for i in range(1,20):
     lambdas.append(i*0.25)
     # print(X_train)
     LR = LogisticRegression()
 
-    LR.fit(X,y,tol=0.00001, n_iter=100, lr=0.01, fit_intercept=True, reg='L2', lbda=(i*0.25))
+    LR.fit(X,y,tol=0.00001, n_iter=500, lr=0.001, fit_intercept=True, reg='L1', lbda=(i*0.1))
     
     y_hat = LR.predict(X)
 
@@ -28,7 +28,7 @@ for i in range(1,9):
     scores.append(temp_acc)
     
     print("______")
-    print("lambda:",i*0.25)
+    print("lambda:",i*0.1)
     print('Accuracy: ', temp_acc)
     print("______")
 

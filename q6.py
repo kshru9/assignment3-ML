@@ -5,16 +5,18 @@ import matplotlib.pyplot as plt
 import autograd.numpy as np
 from autograd import grad
 from autograd.misc.optimizers import adam
+from numpy.lib.npyio import load
 from NN.nn_reg import init_random_params, build_toy_dataset, log_gaussian, logprob, nn_predict
 
+from sklearn.datasets import load_boston
 
-if __name__ == '__main__':
+def run():
 
     init_scale = 0.1
     weight_prior_variance = 10.0
-    init_params = init_random_params(init_scale, layer_sizes=[1, 4, 4, 1])
+    init_params = init_random_params(init_scale, layer_sizes=[13, 4, 4, 1])
 
-    inputs, targets = build_toy_dataset()
+    inputs, targets = load_dataset()
 
     def objective(weights, t):
         return -logprob(weights, inputs, targets)\
@@ -43,3 +45,14 @@ if __name__ == '__main__':
     print("Optimizing network parameters...")
     optimized_params = adam(grad(objective), init_params,
                             step_size=0.01, num_iters=1000, callback=callback)
+
+
+def load_dataset():
+    data = load_boston()
+    X = data.data
+    y = data.target
+
+    return X,y
+
+if __name__ == '__main__':
+    run()

@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from logisticRegression.logisticRegression import LogisticRegression
-import sys
-from metrics import accuracy, recall, precision
+from metrics import accuracy
+import math
 
 np.random.seed(42)
 
@@ -14,7 +14,9 @@ y = pd.Series(np.random.randint(0,2,size=N))
 
 LR = LogisticRegression()
 
-LR.fit(X,y,tol=0.00001,lr=0.01,n_iter=150,fit_intercept=True, reg='L2',lbda=0.25)
+features = LR.fit(X,y,tol=0.00001,lr=0.001,n_iter=500,fit_intercept=True, reg='L1',lbda=0.25)
+
+print(abs(features))
 
 y_hat = LR.predict(X)
 
