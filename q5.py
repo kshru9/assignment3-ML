@@ -25,8 +25,5 @@ def main():
     acc = accuracy(y_test, y_pred)
     print ("Accuracy:", acc)
 
-    # # Reduce dimension to two using PCA and plot the results
-    # Plot().plot_in_2d(X_test, y_pred, title="Multilayer Perceptron", accuracy=accuracy, legend_labels=np.unique(y))
-
 if __name__ == "__main__":
     main()

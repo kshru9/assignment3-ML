@@ -1,3 +1,6 @@
-dataset with K and do q7 using it
-dataset split 30 10
-implement onehotencoder for multiclass
+- multiclass visualise confusion matrix and digits most confused and least confused digit
+- plot q1
+- time and space complexity
+- nn reg boston dataset
+- 
+

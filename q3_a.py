@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from logisticRegression.LR_multiclass import LRMulitclass
-from metrics import accuracy, recall, precision
+from metrics import accuracy
 
 np.random.seed(42)
 
@@ -17,7 +16,5 @@ LR = LRMulitclass()
 LR.fit(X,y,lr=0.001,n_iter=1000)
 
 y_hat = LR.predict(X)
-print("y:",y)
-print("y_hat:",y_hat)
 
 print('Accuracy: ', accuracy(y_hat=y_hat, y=y))
