@@ -13,7 +13,7 @@ y = pd.Series(np.random.randint(0,3,size=N))
 
 LR = LRMulitclass()
 
-LR.fit(X,y,lr=0.001,n_iter=1000)
+LR.fit(X,y,lr=0.01,n_iter=100)
 
 y_hat = LR.predict(X)
 
