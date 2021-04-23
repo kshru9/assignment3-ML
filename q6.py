@@ -10,7 +10,7 @@ def main():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, seed=1)
 
-    reg = MultilayerPerceptron(n_hidden=32, n_iterations=10, learning_rate=0.001)
+    reg = MultilayerPerceptron(n_hidden=32, n_iterations=2000, learning_rate=0.0001)
 
     reg.fit(X_train,y_train)
 
