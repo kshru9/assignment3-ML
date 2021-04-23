@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from NN.utils import Sigmoid, RMSE, ReLU, Softmax
+from NN.utils import RMSE, ReLU, Softmax
 
 class MultilayerPerceptron():
     """Multilayer Perceptron classifier. A fully-connected neural network with one hidden layer.
@@ -45,10 +45,10 @@ class MultilayerPerceptron():
             # ..............
 
             # HIDDEN LAYER
-            hidden_input = X.dot(self.W) + self.w0
+            hidden_input = np.dot(X,self.W) + self.w0
             hidden_output = self.hidden_activation(hidden_input)
             # OUTPUT LAYER
-            output_layer_input = hidden_output.dot(self.V) + self.v0
+            output_layer_input = np.dot(hidden_output, self.V) + self.v0
             y_pred = self.output_activation(output_layer_input)
 
             # ...............
@@ -58,25 +58,27 @@ class MultilayerPerceptron():
             # OUTPUT LAYER
             # Grad. w.r.t input of output layer
             grad_wrt_out_l_input = self.loss.gradient(y, y_pred) * self.output_activation.gradient(output_layer_input)
-            grad_v = hidden_output.T.dot(grad_wrt_out_l_input)
+            grad_v = np.dot(hidden_output.T, grad_wrt_out_l_input)
             grad_v0 = np.sum(grad_wrt_out_l_input, axis=0, keepdims=True)
             # HIDDEN LAYER
             # Grad. w.r.t input of hidden layer
-            grad_wrt_hidden_l_input = self.V.T.dot(grad_wrt_out_l_input) * self.hidden_activation.gradient(hidden_input)
-            grad_w = X.T.dot(grad_wrt_hidden_l_input)
-            grad_w0 = np.sum(grad_wrt_hidden_l_input, axis=0, keepdims=True)
+            grad_wrt_hidden_l_input = self.hidden_activation.gradient(hidden_output).dot(grad_v)
+            temp = np.dot(X.T, grad_wrt_hidden_l_input)
+            grad_w = 1./X.shape[1] * np.dot(grad_wrt_hidden_l_input, X)
+            # grad_w = X.T.dot(grad_wrt_hidden_l_input)
+            grad_w0 = 1./X.shape[1] * np.sum(grad_wrt_hidden_l_input, axis=0, keepdims=True)
 
-            dLoss_Yh = - (np.divide(self.Y, self.Yh ) - np.divide(1 - self.Y, 1 - self.Yh))    
+            # dLoss_Yh = - (np.divide(self.Y, self.Yh ) - np.divide(1 - self.Y, 1 - self.Yh))    
         
-            dLoss_Z2 = dLoss_Yh * dSigmoid(self.ch['Z2'])    
-            dLoss_A1 = np.dot(self.param["W2"].T,dLoss_Z2)
-            dLoss_W2 = 1./self.ch['A1'].shape[1] * np.dot(dLoss_Z2,self.ch['A1'].T)
-            dLoss_b2 = 1./self.ch['A1'].shape[1] * np.dot(dLoss_Z2, np.ones([dLoss_Z2.shape[1],1])) 
+            # dLoss_Z2 = dLoss_Yh * dSigmoid(self.ch['Z2'])    
+            # dLoss_A1 = np.dot(self.param["W2"].T,dLoss_Z2)
+            # dLoss_W2 = 1./self.ch['A1'].shape[1] * np.dot(dLoss_Z2,self.ch['A1'].T)
+            # dLoss_b2 = 1./self.ch['A1'].shape[1] * np.dot(dLoss_Z2, np.ones([dLoss_Z2.shape[1],1])) 
                                 
-            dLoss_Z1 = dLoss_A1 * dRelu(self.ch['Z1'])        
-            dLoss_A0 = np.dot(self.param["W1"].T,dLoss_Z1)
-            dLoss_W1 = 1./self.X.shape[1] * np.dot(dLoss_Z1,self.X.T)
-            dLoss_b1 = 1./self.X.shape[1] * np.dot(dLoss_Z1, np.ones([dLoss_Z1.shape[1],1]))
+            # dLoss_Z1 = dLoss_A1 * dRelu(self.ch['Z1'])        
+            # dLoss_A0 = np.dot(self.param["W1"].T,dLoss_Z1)
+            # dLoss_W1 = 1./self.X.shape[1] * np.dot(dLoss_Z1,self.X.T)
+            # dLoss_b1 = 1./self.X.shape[1] * np.dot(dLoss_Z1, np.ones([dLoss_Z1.shape[1],1]))
 
             # Update weights (by gradient descent)
             # Move against the gradient to minimize loss

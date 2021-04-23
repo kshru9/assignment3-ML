@@ -36,7 +36,7 @@ class ReLU():
         return anp.where(x >= 0, x, 0)
 
     def gradient(self,x):
-        return grad(self.__call__)(x)
+        return elementwise_grad(self.__call__)(x)
 
 class Softmax():
     def __call__(self, x):
