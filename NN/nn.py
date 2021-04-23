@@ -94,14 +94,13 @@ class MultilayerPerceptron():
     learning_rate: float
         The step length that will be used when updating the weights.
     """
-    def __init__(self, n_hidden, n_iterations=100, learning_rate=0.01, classifier=True):
+    def __init__(self, n_hidden, n_iterations=100, learning_rate=0.01):
         self.n_hidden = n_hidden
         self.n_iterations = n_iterations
         self.learning_rate = learning_rate
         self.hidden_activation = Sigmoid()
         self.output_activation = Softmax()
         self.loss = CrossEntropy()
-        self.classifier =classifier
 
     def _initialize_weights(self, X, y):
         if (self.classifier):
@@ -159,7 +158,9 @@ class MultilayerPerceptron():
             # ...............
             #  Backward Pass
             # ...............
-
+            
+            print(self.loss.gradient(y, y_pred).shape)
+            print(self.output_activation.gradient(output_layer_input).shape)
             # OUTPUT LAYER
             # Grad. w.r.t input of output layer
             grad_wrt_out_l_input = self.loss.gradient(y, y_pred) * self.output_activation.gradient(output_layer_input)

@@ -135,22 +135,18 @@ class MultilayerPerceptron():
             # OUTPUT LAYER
             output_layer_input = hidden_output_2.dot(self.V) + self.v0
             y_pred = self.output_activation(output_layer_input)
-            print(len(output_layer_input))
+            # print(len(output_layer_input))
             # ...............
             #  Backward Pass
             # ...............
 
             # OUTPUT LAYER
             # Grad. w.r.t input of output layer
-            grad_wrt_out_l_input = self.loss.gradient(y, y_pred) * self.output_activation.gradient(output_layer_input)
-            print(len(self.loss.gradient(y, y_pred)))
+            grad_wrt_out_l_input = np.dot(self.loss.gradient(y, y_pred), self.output_activation.gradient(output_layer_input))
             grad_v = hidden_output_2.T.dot(grad_wrt_out_l_input)
             grad_v0 = np.sum(grad_wrt_out_l_input, axis=0, keepdims=True)
             # HIDDEN LAYER
             # Grad. w.r.t input of hidden layer
-            # print("grad_wrt_out_l_input",grad_wrt_out_l_input)
-            # print(self.V)
-            print(grad_wrt_out_l_input)
             grad_wrt_hidden_l_input_2 = grad_wrt_out_l_input.dot(self.V.T) * self.hidden_activation.gradient(hidden_input_2)
             grad_w1 = hidden_output.T.dot(grad_wrt_hidden_l_input_2)
             grad_w1_0 = np.sum(grad_wrt_hidden_l_input_2, axis=0, keepdims=True)
@@ -161,7 +157,6 @@ class MultilayerPerceptron():
 
             # Update weights (by gradient descent)
             # Move against the gradient to minimize loss
-            # print(self.V, grad_v)
             self.V  -= self.learning_rate * grad_v
             self.v0 -= self.learning_rate * grad_v0
             self.W1 -= self.learning_rate * grad_w1

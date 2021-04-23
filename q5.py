@@ -15,7 +15,7 @@ def main():
 
     # MLP
     clf = MultilayerPerceptron(n_hidden=128,
-        n_iterations=10000,
+        n_iterations=1,
         learning_rate=0.001)
 
     clf.fit(X_train, y_train)

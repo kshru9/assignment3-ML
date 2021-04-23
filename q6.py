@@ -59,7 +59,6 @@
 
 
 from NN.nn_reg import MultilayerPerceptron, normalize, train_test_split
-import numpy as np
 from sklearn.datasets import load_boston
 from sklearn.metrics import mean_squared_error
 
@@ -68,9 +67,9 @@ def main():
     X = normalize(data.data)
     y = data.target
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, seed=1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, seed=1)
 
-    reg = MultilayerPerceptron(n_hidden=32, n_iterations=10, learning_rate=0.1)
+    reg = MultilayerPerceptron(n_hidden=128, n_iterations=100, learning_rate=0.001)
 
     reg.fit(X_train,y_train)
 
