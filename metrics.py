@@ -90,3 +90,24 @@ def recall(y_hat, y, cls):
 
     ans = (recall_count/total_samples_chosen)*100
     return ans
+
+def rmse(y_hat, y):
+    """
+    Function to calculate the root-mean-squared-error(rmse)
+    Inputs:
+    > y_hat: pd.Series of predictions
+    > y: pd.Series of ground truth
+    Output:
+    > Returns the rmse as float
+    """
+
+    if isinstance(y_hat,pd.Series):
+        y_hat = y_hat.tolist()
+    if isinstance(y,pd.Series):
+        y = y.tolist()
+    diff = [0]*len(y)
+    for i in range (len(diff)):
+        diff[i]=(y_hat[i]-y[i])**2
+    ans = sum(diff)/len(y)
+    ans = math.sqrt(ans)
+    return ans
