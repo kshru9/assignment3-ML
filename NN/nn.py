@@ -103,7 +103,7 @@ class MultilayerPerceptron():
         self.loss = CrossEntropy()
 
     def _initialize_weights(self, X, y):
-        if (self.classifier):
+        if (True):
             n_samples, n_features = X.shape
             _, n_outputs = y.shape
             # Hidden layer 1
@@ -120,17 +120,6 @@ class MultilayerPerceptron():
             # Output layer
             limit   = 1 / math.sqrt(self.n_hidden)
             self.V  = np.random.uniform(-limit, limit, (hl_2, n_outputs))
-            self.v0 = np.zeros((1, n_outputs))
-        else:
-            n_samples, n_features = X.shape
-            n_outputs = 1
-            # Hidden layer
-            limit   = 1 / math.sqrt(n_features)
-            self.W  = np.random.uniform(-limit, limit, (n_features, self.n_hidden))
-            self.w0 = np.zeros((1, self.n_hidden))
-            # Output layer
-            limit   = 1 / math.sqrt(self.n_hidden)
-            self.V  = np.random.uniform(-limit, limit, (self.n_hidden, n_outputs))
             self.v0 = np.zeros((1, n_outputs))
 
     def fit(self, X, y):
@@ -158,9 +147,7 @@ class MultilayerPerceptron():
             # ...............
             #  Backward Pass
             # ...............
-            
-            print(self.loss.gradient(y, y_pred).shape)
-            print(self.output_activation.gradient(output_layer_input).shape)
+
             # OUTPUT LAYER
             # Grad. w.r.t input of output layer
             grad_wrt_out_l_input = self.loss.gradient(y, y_pred) * self.output_activation.gradient(output_layer_input)
