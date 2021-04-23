@@ -1,6 +1,34 @@
+def confusion_matrix(y_hat,y):
+    mat = [[0]*10]*10
+    samples = len(y)
+    for i in range(samples):
+        mat[y[i]][y_hat[i]] +=1
 
-def visualise_confusion(y_hat,y,digit):
-    mat = [[0,0],[0,0]]
+    for i in range(10):
+        all = sum(mat[i])
+        for j in range(10):
+            mat[i][j] = mat[i][j] / all
+
+    return mat
+
+def find_digits(conf_mat):
+    all_conf = dict()
+    for i in range(10):
+        all_conf[conf_mat[i][i]] = i
+
+    m = list(all_conf.keys())
+    m.sort(reverse=True)
+
+    least = all_conf[m[-1]]
+    mx1 = all_conf[m[0]]
+    mx2 = all_conf[m[1]]
+
+    return (least,mx1,mx2)
+
+
+
+def fdm(y_hat,y,digit):
+    mat = [[0]*9]*9
     samples = len(y)
     for i in range(samples):
         if (digit == y[i]):
@@ -56,6 +84,4 @@ def for_each_digit(y_hat,y):
             max_conf_2 = all_coeff[i]
             max_c_2 = i
     
-    return (min_c, max_c_1, max_c_2)
-
-print(for_each_digit(y_hat,y_test))
+    return (least_conf, max_c_1, max_c_2)
